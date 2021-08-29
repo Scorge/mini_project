@@ -381,8 +381,8 @@ MonoBehaviour:
   points: []
   monsterObject: {fileID: 4297584200992869482, guid: 88a128a7a76592e4d8dfefb61e19df79,
     type: 3}
-  createTime: 0.5
-  maxMonster: 100
+  createTime: 1
+  maxMonster: 20
   isGameOver: 0
 --- !u!1 &829283393
 GameObject:
@@ -1088,6 +1088,10 @@ MonoBehaviour:
   FirePos: {fileID: 1235577352}
   Projectile: {fileID: 1964431648506373332, guid: 0c41dd216fd4b4940bf271c0265685bf,
     type: 3}
+  NormalSprite: {fileID: 21300000, guid: f9c6a1def7f63e74998d0ba679d74dac, type: 3}
+  HitSprite: {fileID: 21300000, guid: 59fbb0ba8e2445c449e8b61063c2ce99, type: 3}
+  MaxHP: 30
+  HitDelay: 0.5
 --- !u!54 &1726165141
 Rigidbody:
   m_ObjectHideFlags: 0
