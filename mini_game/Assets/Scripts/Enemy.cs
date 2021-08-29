@@ -23,10 +23,19 @@ public class Enemy : MonoBehaviour
     private float HitDelay;
 
     [SerializeField]
+    private int Damage;
+
+    [SerializeField]
+    private float AttackDelay;
+
+    [SerializeField]
     private Sprite NormalSprite;
 
     [SerializeField]
     private Sprite HitSprite;
+
+    [SerializeField]
+    private Sprite AttackSprite;
 
     private SpriteRenderer sprite;
 
@@ -40,6 +49,7 @@ public class Enemy : MonoBehaviour
     {
         Normal,
         Hit,
+        Attack,
         Dead
     };
 
@@ -85,6 +95,9 @@ public class Enemy : MonoBehaviour
             case State.Hit:
                 sprite.sprite = HitSprite;
                 break;
+            case State.Attack:
+                sprite.sprite = AttackSprite;
+                break;
             case State.Dead:
                 break;
         }
@@ -107,7 +120,27 @@ public class Enemy : MonoBehaviour
         Vector3 NewSpeed = (Target.transform.position - this.transform.position).normalized * Speed;
         NewSpeed.z = 0.0f;
         rigid.velocity = NewSpeed;
-        Debug.Log(NewSpeed);
+        if (Vector3.Distance(Target.transform.position, this.transform.position) < AttackRange)
+            Attack();
+    }
+
+    public void Attack()
+    {
+        Vector3 force = (rigid.velocity).normalized * 3.0f;
+        rigid.velocity = Vector3.zero;
+        state = State.Attack;
+
+        Player.GetComponent<MainCharacter>().Hit(Damage, force);
+        StartCoroutine(this.AttackState());
+    }
+    IEnumerator AttackState()
+    {
+        UpdateSprite();
+        yield return new WaitForSeconds(AttackDelay);
+        rigid.velocity = Vector3.zero;
+        state = State.Normal;
+        UpdateSprite();
+        yield break;
     }
 
     public void Hit(int damage, Vector3 force)
@@ -115,7 +148,6 @@ public class Enemy : MonoBehaviour
         rigid.velocity = Vector3.zero;
         state = State.Hit;
         CurrentHP = CurrentHP - damage;
-        Debug.Log(force);
         rigid.AddForce(force, ForceMode.Impulse);
         StartCoroutine(this.Hited());
     }
