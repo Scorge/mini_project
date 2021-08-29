@@ -104,11 +104,15 @@ public class Enemy : MonoBehaviour
 
     void ChaseTarget()
     {
-
+        Vector3 NewSpeed = (Target.transform.position - this.transform.position).normalized * Speed;
+        NewSpeed.z = 0.0f;
+        rigid.velocity = NewSpeed;
+        Debug.Log(NewSpeed);
     }
 
     public void Hit(int damage, Vector3 force)
     {
+        rigid.velocity = Vector3.zero;
         state = State.Hit;
         CurrentHP = CurrentHP - damage;
         Debug.Log(force);
