@@ -4,10 +4,17 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
+    [SerializeField]
+    private int Damage;
+
+    [SerializeField]
+    private float Force;
+
+    private Rigidbody rigid;
     // Start is called before the first frame update
     void Start()
     {
-        
+        rigid = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -19,7 +26,15 @@ public class Projectile : MonoBehaviour
     }
     void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Wall")
+        if (other.tag == "Wall")
             Destroy(gameObject);
+
+        if (other.tag == "Enemy")
+        {
+            Enemy enemy = other.gameObject.GetComponent<Enemy>();
+            Vector3 force = (rigid.velocity).normalized * Force;
+            enemy.Hit(Damage, force);
+            Destroy(gameObject);
+        }
     }
 }
